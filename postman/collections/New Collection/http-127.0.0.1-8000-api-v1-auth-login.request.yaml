@@ -1,0 +1,28 @@
+$kind: http-request
+name: http://127.0.0.1:8000/api/v1/auth/login
+description: ""
+url: http://127.0.0.1:8000/api/v1/pumps/01a112c4-2282-72d4-9a69-61c9a22c7a0a/nozzles
+method: POST
+headers:
+  Accept: application/json
+body:
+  type: json
+  content: "{\r
+
+    \  \"nozzle_code\": \"NZ-01B\",\r
+
+    \  \"fuel_product_id\": 1\r
+
+    }"
+auth:
+  type: bearer
+  credentials:
+    token: 2|XtWHYv9WkayODF9QjzdsTNhRIxFqsrZUhe34dFe2be9e43a2
+scripts:
+  - type: beforeRequest
+    code: ""
+    language: text/javascript
+settings:
+  disabledSystemHeaders:
+    - accept
+order: 1791291268069
