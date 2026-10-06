@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\FuelPriceController;
 use App\Http\Controllers\Api\V1\HealthController;
 use App\Http\Controllers\Api\V1\NozzleController;
 use App\Http\Controllers\Api\V1\PumpController;
 use App\Http\Controllers\Api\V1\StationController;
+use App\Http\Controllers\Api\V1\TankController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -15,9 +17,15 @@ Route::prefix('v1')->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/health', [HealthController::class, 'index']);
+    Route::get(
+        '/health',
+        [HealthController::class, 'index']
+    );
 
-    Route::post('/auth/login', [AuthController::class, 'login']);
+    Route::post(
+        '/auth/login',
+        [AuthController::class, 'login']
+    );
 
 
     /*
@@ -28,14 +36,20 @@ Route::prefix('v1')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
 
-        Route::get('/me', [AuthController::class, 'me']);
+        Route::get(
+            '/me',
+            [AuthController::class, 'me']
+        );
 
-        Route::post('/auth/logout', [AuthController::class, 'logout']);
+        Route::post(
+            '/auth/logout',
+            [AuthController::class, 'logout']
+        );
 
 
         /*
         |--------------------------------------------------------------------------
-        | Temporary RBAC Test Routes
+        | Temporary RBAC Tests
         |--------------------------------------------------------------------------
         */
 
@@ -77,7 +91,7 @@ Route::prefix('v1')->group(function () {
 
         /*
         |--------------------------------------------------------------------------
-        | Station Owner / Platform Admin Routes
+        | Station Owner / Platform Admin
         |--------------------------------------------------------------------------
         */
 
@@ -138,6 +152,45 @@ Route::prefix('v1')->group(function () {
             Route::post(
                 '/pumps/{pump}/nozzles',
                 [NozzleController::class, 'store']
+            );
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Tanks
+            |--------------------------------------------------------------------------
+            */
+
+            Route::get(
+                '/stations/{station}/tanks',
+                [TankController::class, 'index']
+            );
+
+            Route::post(
+                '/stations/{station}/tanks',
+                [TankController::class, 'store']
+            );
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Fuel Prices
+            |--------------------------------------------------------------------------
+            */
+
+            Route::get(
+                '/stations/{station}/prices',
+                [FuelPriceController::class, 'index']
+            );
+
+            Route::get(
+                '/stations/{station}/prices/current',
+                [FuelPriceController::class, 'current']
+            );
+
+            Route::post(
+                '/stations/{station}/prices',
+                [FuelPriceController::class, 'store']
             );
 
         });
