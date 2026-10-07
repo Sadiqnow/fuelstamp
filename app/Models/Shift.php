@@ -83,4 +83,11 @@ class Shift extends Model
             MeterReading::class
         );
     }
+
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(
+            Transaction::class
+        );
+    }
 }

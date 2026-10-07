@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\TraditionalTransactionController;
 use App\Http\Controllers\Api\V1\StationApprovalController;
 use App\Http\Controllers\Api\V1\MeterReadingController;
 use App\Http\Controllers\Api\V1\ShiftCustodyController;
@@ -308,6 +309,11 @@ Route::prefix('v1')->group(function () {
                 '/shifts/{shift}/activate',
                 [ShiftActivationController::class, 'activate']
             );
+
+            Route::get(
+                '/shifts/{shift}/transactions',
+                [TraditionalTransactionController::class, 'index']
+            );
         });
 
         /*
@@ -321,6 +327,12 @@ Route::prefix('v1')->group(function () {
                 '/shift-nozzle-assignments/{assignment}/accept',
                 [ShiftCustodyController::class, 'accept']
             );
+
+            Route::post(
+                '/shifts/{shift}/transactions/traditional',
+                [TraditionalTransactionController::class, 'store']
+            ); 
+
         });
 
     });
