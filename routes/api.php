@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\V1\ShiftTemplateController;
+use App\Http\Controllers\Api\V1\StationStaffController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\FuelPriceController;
 use App\Http\Controllers\Api\V1\HealthController;
@@ -191,6 +193,49 @@ Route::prefix('v1')->group(function () {
             Route::post(
                 '/stations/{station}/prices',
                 [FuelPriceController::class, 'store']
+            );
+
+            /*
+            |--------------------------------------------------------------------------
+            | Shift Templates
+            |--------------------------------------------------------------------------
+            */
+
+            Route::get(
+                '/stations/{station}/shift-templates',
+                [ShiftTemplateController::class, 'index']
+            );
+
+            Route::post(
+                '/stations/{station}/shift-templates',
+                [ShiftTemplateController::class, 'store']
+            );
+
+            Route::patch(
+                '/shift-templates/{shiftTemplate}',
+                [ShiftTemplateController::class, 'update']
+            );
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Station Staff
+            |--------------------------------------------------------------------------
+            */
+
+            Route::get(
+                '/stations/{station}/staff',
+                [StationStaffController::class, 'index']
+            );
+
+            Route::post(
+                '/stations/{station}/staff',
+                [StationStaffController::class, 'store']
+            );
+
+            Route::patch(
+                '/station-staff/{stationStaff}/deactivate',
+                [StationStaffController::class, 'deactivate']
             );
 
         });
