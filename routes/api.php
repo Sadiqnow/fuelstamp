@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\ShiftLedgerController;
 use App\Http\Controllers\Api\V1\TraditionalTransactionController;
 use App\Http\Controllers\Api\V1\StationApprovalController;
 use App\Http\Controllers\Api\V1\MeterReadingController;
@@ -314,6 +315,12 @@ Route::prefix('v1')->group(function () {
                 '/shifts/{shift}/transactions',
                 [TraditionalTransactionController::class, 'index']
             );
+
+            Route::get(
+                '/shifts/{shift}/ledger',
+                [ShiftLedgerController::class, 'summary']
+            );
+
         });
 
         /*
