@@ -21,6 +21,9 @@ class Station extends Model
         'longitude',
         'status',
         'license_expiry',
+        'approved_by_user_id',
+        'approved_at' => 'datetime',
+        'approval_notes',
     ];
 
     protected function casts(): array
@@ -61,4 +64,13 @@ class Station extends Model
     {
         return $this->hasMany(StationStaff::class);
     }
+
+    public function approvedBy(): BelongsTo
+{
+    return $this->belongsTo(
+        User::class,
+        'approved_by_user_id'
+    );
 }
+
+}   

@@ -19,6 +19,9 @@ class StationResource extends JsonResource
             'status' => $this->status,
             'license_expiry' => optional($this->license_expiry)?->toDateString(),
             'created_at' => $this->created_at?->toISOString(),
+            'approved_at' => $this->approved_at?->toISOString(),
+            'approved_by_user_id' => $this->approved_by_user_id,
+            'approval_notes' => $this->approval_notes,
         ];
     }
 }

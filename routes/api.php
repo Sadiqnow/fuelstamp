@@ -1,5 +1,12 @@
 <?php
 
+use App\Http\Controllers\Api\V1\StationApprovalController;
+use App\Http\Controllers\Api\V1\MeterReadingController;
+use App\Http\Controllers\Api\V1\ShiftCustodyController;
+use App\Http\Controllers\Api\V1\ShiftActivationController;
+use App\Http\Controllers\Api\V1\ShiftController;
+use App\Http\Controllers\Api\V1\ShiftAssignmentController;
+use App\Http\Controllers\Api\V1\ShiftNozzleAssignmentController;
 use App\Http\Controllers\Api\V1\ShiftTemplateController;
 use App\Http\Controllers\Api\V1\StationStaffController;
 use App\Http\Controllers\Api\V1\AuthController;
@@ -37,6 +44,7 @@ Route::prefix('v1')->group(function () {
     */
 
     Route::middleware('auth:sanctum')->group(function () {
+
 
         Route::get(
             '/me',
@@ -100,6 +108,12 @@ Route::prefix('v1')->group(function () {
         Route::middleware(
             'role:STATION_OWNER,PLATFORM_ADMIN'
         )->group(function () {
+
+            /*
+            |--------------------------------------------------------------------------
+            | Station Configuration
+            |--------------------------------------------------------------------------
+            */
 
             /*
             |--------------------------------------------------------------------------
@@ -238,6 +252,75 @@ Route::prefix('v1')->group(function () {
                 [StationStaffController::class, 'deactivate']
             );
 
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | Platform Admin Governance
+        |--------------------------------------------------------------------------
+        */
+
+        Route::middleware('role:PLATFORM_ADMIN')->group(function () {
+            Route::post(
+                '/admin/stations/{station}/approve',
+                [StationApprovalController::class, 'approve']
+            );
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | Station Manager - Shift Operations
+        |--------------------------------------------------------------------------
+        */
+
+        Route::middleware('role:STATION_MANAGER')->group(function () {
+            Route::get(
+                '/stations/{station}/shifts',
+                [ShiftController::class, 'index']
+            );
+
+            Route::post(
+                '/stations/{station}/shifts',
+                [ShiftController::class, 'store']
+            );
+
+            Route::get(
+                '/shifts/{shift}',
+                [ShiftController::class, 'show']
+            );
+
+            Route::post(
+                '/shifts/{shift}/attendants',
+                [ShiftAssignmentController::class, 'store']
+            );
+
+            Route::post(
+                '/shifts/{shift}/nozzles',
+                [ShiftNozzleAssignmentController::class, 'store']
+            );
+
+            Route::post(
+                '/shifts/{shift}/opening-readings',
+                [MeterReadingController::class, 'storeOpening']
+            );
+
+            Route::post(
+                '/shifts/{shift}/activate',
+                [ShiftActivationController::class, 'activate']
+            );
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | Attendant - Custody Acceptance
+        |--------------------------------------------------------------------------
+        */
+
+        Route::middleware('role:ATTENDANT')->group(function () {
+            Route::post(
+                '/shift-nozzle-assignments/{assignment}/accept',
+                [ShiftCustodyController::class, 'accept']
+            );
         });
 
     });
