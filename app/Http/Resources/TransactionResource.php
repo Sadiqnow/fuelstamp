@@ -5,12 +5,13 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TransactionResource extends JsonResource
+class TransactionReceiptResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        return [
-            'id' => $this->id,
+        $receiptPayload = [
+            'transaction_id' =>
+                $this->id,
 
             'transaction_code' =>
                 $this->transaction_code,
@@ -21,46 +22,54 @@ class TransactionResource extends JsonResource
             'status' =>
                 $this->status,
 
-            'shift_id' =>
-                $this->shift_id,
+            'station' => [
+                'id' =>
+                    $this->station?->id,
 
-            'station_id' =>
-                $this->station_id,
+                'station_code' =>
+                    $this->station?->station_code,
 
-            'attendant' => $this->whenLoaded(
-                'attendant',
-                fn () => [
-                    'id' => $this->attendant->id,
-                    'user_code' =>
-                        $this->attendant->user_code,
-                    'name' =>
-                        $this->attendant->name,
-                ]
-            ),
+                'name' =>
+                    $this->station?->name,
+            ],
 
-            'nozzle' => $this->whenLoaded(
-                'nozzle',
-                fn () => [
-                    'id' => $this->nozzle->id,
-                    'nozzle_code' =>
-                        $this->nozzle->nozzle_code,
-                ]
-            ),
+            'shift' => [
+                'id' =>
+                    $this->shift?->id,
 
-            'fuel_product' =>
-                $this->whenLoaded(
-                    'fuelProduct',
-                    fn () => [
-                        'id' =>
-                            $this->fuelProduct->id,
+                'shift_code' =>
+                    $this->shift?->shift_code,
+            ],
 
-                        'code' =>
-                            $this->fuelProduct->code,
+            'attendant' => [
+                'id' =>
+                    $this->attendant?->id,
 
-                        'name' =>
-                            $this->fuelProduct->name,
-                    ]
-                ),
+                'user_code' =>
+                    $this->attendant?->user_code,
+
+                'name' =>
+                    $this->attendant?->name,
+            ],
+
+            'nozzle' => [
+                'id' =>
+                    $this->nozzle?->id,
+
+                'nozzle_code' =>
+                    $this->nozzle?->nozzle_code,
+            ],
+
+            'fuel_product' => [
+                'id' =>
+                    $this->fuelProduct?->id,
+
+                'code' =>
+                    $this->fuelProduct?->code,
+
+                'name' =>
+                    $this->fuelProduct?->name,
+            ],
 
             'volume_litres' =>
                 $this->volume_litres,
@@ -87,18 +96,56 @@ class TransactionResource extends JsonResource
                     ''
                 ),
 
-            'manual_detail' =>
-                $this->whenLoaded(
-                    'manualDetail'
-                ),
+            'payment' => [
+                'method' =>
+                    $this->payment?->payment_method,
 
-            'payment' =>
-                $this->whenLoaded(
-                    'payment'
-                ),
+                'amount_minor' =>
+                    $this->payment?->amount_minor,
+
+                'amount_naira' =>
+                    $this->payment
+                        ? number_format(
+                            $this->payment->amount_minor / 100,
+                            2,
+                            '.',
+                            ''
+                        )
+                        : null,
+
+                'reference' =>
+                    $this->payment?->payment_reference,
+
+                'status' =>
+                    $this->payment?->status,
+            ],
 
             'completed_at' =>
                 $this->completed_at?->toISOString(),
+        ];
+
+        ksort($receiptPayload);
+
+        $canonicalJson = json_encode(
+            $receiptPayload,
+            JSON_UNESCAPED_SLASHES |
+            JSON_UNESCAPED_UNICODE
+        );
+
+        return [
+            'receipt' =>
+                $receiptPayload,
+
+            'verification' => [
+                'algorithm' =>
+                    'SHA-256',
+
+                'hash' =>
+                    hash(
+                        'sha256',
+                        $canonicalJson
+                    ),
+            ],
         ];
     }
 }

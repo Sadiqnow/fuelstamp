@@ -1,5 +1,9 @@
 <?php
 
+
+use App\Http\Controllers\Api\V1\ManagerDashboardController;
+use App\Http\Controllers\Api\V1\DailyStationReportController;
+use App\Http\Controllers\Api\V1\ShiftAuditPackageController;
 use App\Http\Controllers\Api\V1\ShiftClosingController;
 use App\Http\Controllers\Api\V1\ReconciliationController;
 use App\Http\Controllers\Api\V1\ShiftLedgerController;
@@ -65,10 +69,30 @@ Route::prefix('v1')->group(function () {
             [AuthController::class, 'logout']
         );
 
-    Route::get(
-            '/transactions/{transaction}/receipt',
-            [TransactionReceiptController::class, 'show']
-        );
+        Route::get(
+                '/transactions/{transaction}/receipt',
+                [TransactionReceiptController::class, 'show']
+            );
+
+        Route::get(
+            '/shifts/{shift}/audit-package',
+            [ShiftAuditPackageController::class, 'show']
+            );
+
+        Route::get(
+            '/shifts/{shift}/audit-package/verify',
+            [ShiftAuditPackageController::class, 'verify']
+            );
+        
+        Route::get(
+                '/stations/{station}/reports/daily',
+                [DailyStationReportController::class, 'show']
+            );
+
+        Route::get(
+            '/stations/{station}/dashboard',
+            [ManagerDashboardController::class, 'show']
+            );        
 
         /*
         |--------------------------------------------------------------------------
