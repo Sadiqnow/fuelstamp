@@ -1,7 +1,7 @@
 $kind: http-request
 name: http://127.0.0.1:8000/api/v1/auth/login
 description: ""
-url: http://127.0.0.1:8000/api/v1/stations/01a112b1-727e-71ab-bd93-317a5feeadd6/shift-templates
+url: http://127.0.0.1:8000/api/v1/admin/wallets/01a119a4-446d-71c0-9039-a9b4601e2a59/fund
 method: POST
 headers:
   Accept: application/json
@@ -9,19 +9,19 @@ body:
   type: json
   content: "{\r
 
-    \  \"name\": \"Morning Shift\",\r
+    \  \"asset_type\": \"NGN\",\r
 
-    \  \"duration_minutes\": 480,\r
+    \  \"amount_minor\": 10000000,\r
 
-    \  \"break_minutes\": 30,\r
+    \  \"idempotency_key\": \"wallet-demo-ngn-001\",\r
 
-    \  \"reconciliation_window_minutes\": 30\r
+    \  \"notes\": \"Build 5 development wallet funding.\"\r
 
     }"
 auth:
   type: bearer
   credentials:
-    token: 6|DkwvHbnf6tF9RyhBDmVx2NHROkTPriEthmfmfmI3f1255a7f
+    token: 17|dgCM56vf0x8bCJiWnKI198VIW5VGv8hn8qJKBl8q0917eafe
 scripts:
   - type: beforeRequest
     code: ""

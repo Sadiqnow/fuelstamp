@@ -28,7 +28,8 @@ use App\Http\Controllers\Api\V1\TankController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\ReconciliationReviewController;
 use App\Http\Controllers\Api\V1\ShiftCloseController;
-
+use App\Http\Controllers\Api\V1\BuyerWalletController;
+use App\Http\Controllers\Api\V1\WalletFundingController;
 
 Route::prefix('v1')->group(function () {
 
@@ -92,8 +93,23 @@ Route::prefix('v1')->group(function () {
         Route::get(
             '/stations/{station}/dashboard',
             [ManagerDashboardController::class, 'show']
-            );        
+            );  
+      
+        /*
+        |--------------------------------------------------------------------------
+        | Buyer Wallet
+        |--------------------------------------------------------------------------
+        */
 
+        Route::get(
+            '/buyer/wallet',
+            [BuyerWalletController::class, 'show']
+        );
+
+        Route::get(
+            '/buyer/wallet/ledger',
+            [BuyerWalletController::class, 'ledger']
+        );
         /*
         |--------------------------------------------------------------------------
         | Temporary RBAC Tests
@@ -301,6 +317,11 @@ Route::prefix('v1')->group(function () {
             Route::post(
                 '/admin/stations/{station}/approve',
                 [StationApprovalController::class, 'approve']
+            );
+
+        Route::post(
+                '/admin/wallets/{wallet}/fund',
+                [WalletFundingController::class, 'store']
             );
         });
 
