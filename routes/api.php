@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Controllers\Api\V1\ShiftClosingController;
+use App\Http\Controllers\Api\V1\ReconciliationController;
 use App\Http\Controllers\Api\V1\ShiftLedgerController;
 use App\Http\Controllers\Api\V1\TraditionalTransactionController;
 use App\Http\Controllers\Api\V1\StationApprovalController;
 use App\Http\Controllers\Api\V1\MeterReadingController;
+use App\Http\Controllers\Api\V1\TransactionReceiptController;
 use App\Http\Controllers\Api\V1\ShiftCustodyController;
 use App\Http\Controllers\Api\V1\ShiftActivationController;
 use App\Http\Controllers\Api\V1\ShiftController;
@@ -19,6 +22,9 @@ use App\Http\Controllers\Api\V1\PumpController;
 use App\Http\Controllers\Api\V1\StationController;
 use App\Http\Controllers\Api\V1\TankController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\V1\ReconciliationReviewController;
+use App\Http\Controllers\Api\V1\ShiftCloseController;
+
 
 Route::prefix('v1')->group(function () {
 
@@ -53,11 +59,16 @@ Route::prefix('v1')->group(function () {
             [AuthController::class, 'me']
         );
 
+
         Route::post(
             '/auth/logout',
             [AuthController::class, 'logout']
         );
 
+    Route::get(
+            '/transactions/{transaction}/receipt',
+            [TransactionReceiptController::class, 'show']
+        );
 
         /*
         |--------------------------------------------------------------------------
@@ -321,6 +332,56 @@ Route::prefix('v1')->group(function () {
                 [ShiftLedgerController::class, 'summary']
             );
 
+            Route::post(
+                '/shifts/{shift}/closing-readings',
+                [ShiftClosingController::class, 'storeClosingReading']
+            );
+
+            Route::post(
+                '/shifts/{shift}/reconcile',
+                [ReconciliationController::class, 'generate']
+            );
+
+
+    /*
+|--------------------------------------------------------------------------
+| Reconciliation Review
+|--------------------------------------------------------------------------
+*/
+
+Route::post(
+    '/shifts/{shift}/reconciliation/review',
+    [ReconciliationReviewController::class, 'review']
+);
+
+Route::post(
+    '/shift-discrepancies/{discrepancy}/resolve',
+    [
+        ReconciliationReviewController::class,
+        'resolveDiscrepancy'
+    ]
+);
+
+Route::post(
+    '/shifts/{shift}/reconciliation/approve-resolved',
+    [
+        ReconciliationReviewController::class,
+        'approveAfterResolution'
+    ]
+);
+
+
+/*
+|--------------------------------------------------------------------------
+| Shift Close + Audit Seal
+|--------------------------------------------------------------------------
+*/
+
+Route::post(
+    '/shifts/{shift}/close',
+    [ShiftCloseController::class, 'close']
+);
+
         });
 
         /*
@@ -338,7 +399,12 @@ Route::prefix('v1')->group(function () {
             Route::post(
                 '/shifts/{shift}/transactions/traditional',
                 [TraditionalTransactionController::class, 'store']
-            ); 
+            );
+            
+            Route::post(
+                '/shifts/{shift}/cash-declaration',
+                [ShiftClosingController::class, 'declareCash']
+            );
 
         });
 

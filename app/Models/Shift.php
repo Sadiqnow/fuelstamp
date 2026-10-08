@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Shift extends Model
 {
@@ -90,4 +91,33 @@ class Shift extends Model
             Transaction::class
         );
     }
+
+    public function discrepancies(): HasMany
+{
+    return $this->hasMany(
+        ShiftDiscrepancy::class
+    );
+}
+
+public function auditPackage(): HasOne
+{
+    return $this->hasOne(
+        ShiftAuditPackage::class
+    );
+}
+
+public function reconciliationReport(): HasOne
+{
+    return $this->hasOne(
+        ReconciliationReport::class
+    );
+}
+
+public function cashDeclarations(): HasMany
+{
+    return $this->hasMany(
+        ShiftCashDeclaration::class
+    );
+}
+
 }
