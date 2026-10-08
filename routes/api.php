@@ -30,6 +30,8 @@ use App\Http\Controllers\Api\V1\ReconciliationReviewController;
 use App\Http\Controllers\Api\V1\ShiftCloseController;
 use App\Http\Controllers\Api\V1\BuyerWalletController;
 use App\Http\Controllers\Api\V1\WalletFundingController;
+use App\Http\Controllers\Api\V1\FuelCodeController;
+
 
 Route::prefix('v1')->group(function () {
 
@@ -94,6 +96,7 @@ Route::prefix('v1')->group(function () {
             '/stations/{station}/dashboard',
             [ManagerDashboardController::class, 'show']
             );  
+
       
         /*
         |--------------------------------------------------------------------------
@@ -110,6 +113,27 @@ Route::prefix('v1')->group(function () {
             '/buyer/wallet/ledger',
             [BuyerWalletController::class, 'ledger']
         );
+
+        Route::get(
+            '/buyer/fuel-codes',
+            [FuelCodeController::class, 'index']
+        );
+
+        Route::post(
+            '/buyer/fuel-codes',
+            [FuelCodeController::class, 'store']
+        );
+
+        Route::get(
+            '/buyer/fuel-codes/{fuelCode}',
+            [FuelCodeController::class, 'show']
+        );
+
+        Route::post(
+            '/buyer/fuel-codes/{fuelCode}/cancel',
+            [FuelCodeController::class, 'cancel']
+        );
+
         /*
         |--------------------------------------------------------------------------
         | Temporary RBAC Tests
@@ -323,6 +347,7 @@ Route::prefix('v1')->group(function () {
                 '/admin/wallets/{wallet}/fund',
                 [WalletFundingController::class, 'store']
             );
+
         });
 
         /*
